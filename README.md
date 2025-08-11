@@ -139,42 +139,15 @@ Oferecer uma plataforma centralizada que permita aos gestores de academias:
 - Conexão com internet (para carregar dependências externas)
 - Servidor local opcional (para desenvolvimento)
 
-## 🚀 Instalação Local
-
-### Pré-requisitos
-- Navegador web moderno (Chrome, Firefox, Safari, Edge)
-- Conexão com internet (para carregar dependências externas)
-- Servidor local opcional (para desenvolvimento)
-
 ### Passo a Passo
 
 1. **Abra o arquivo HTML**
    - Método 1: Dê duplo clique no arquivo `index.html`
-   - Método 2: Use um servidor local como Live Server no VS Code
-   - Método 3: Use o comando Python:
-     ```bash
-     # Python 3
-     python -m http.server 8000
-     
-     # Python 2
-     python -m SimpleHTTPServer 8000
-     ```
-   - Acesse `http://localhost:8000` no navegador
-
+   
 2. **Acesse a aplicação**
    - Use as credenciais padrão:
      - **Login**: `admin`
      - **Senha**: `admin`
-
-### Estrutura de Arquivos
-
-```bash
-RotinaPlus_Pro_PC/
-├── index.html # Arquivo principal da aplicação
-├── README.md # Este arquivo de documentação
-├── .gitignore # Arquivos ignorados pelo Git
-└── LICENSE # Licença do projeto
-```
 
 ## 📖 Como Usar
 
