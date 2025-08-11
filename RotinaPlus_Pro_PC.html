@@ -1,0 +1,3885 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RotinaPlus Pro - Sistema Profissional de Gestão de Academias</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            /* Color Palette - Professional */
+            --primary: #4F46E5;
+            --primary-dark: #4338CA;
+            --primary-light: #6366F1;
+            --secondary: #EC4899;
+            --accent: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --dark: #1F2937;
+            --light: #F9FAFB;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            
+            /* Dark Mode Colors */
+            --dark-bg: #0F172A;
+            --dark-surface: #1E293B;
+            --dark-border: #334155;
+            
+            /* Gradients */
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-success: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --gradient-warm: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            --gradient-cool: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            
+            /* Shadows */
+            --shadow-xs: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.15);
+            --shadow-2xl: 0 25px 50px rgba(0,0,0,0.25);
+            --shadow-colored: 0 10px 25px rgba(79, 70, 229, 0.25);
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --radius-2xl: 20px;
+            --radius-full: 9999px;
+            
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: 500ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Dark Mode */
+        [data-theme="dark"] {
+            --primary: #6366F1;
+            --primary-dark: #4F46E5;
+            --primary-light: #818CF8;
+            --secondary: #EC4899;
+            --accent: #10B981;
+            --warning: #F59E0B;
+            --danger: #EF4444;
+            --info: #3B82F6;
+            --dark: #F9FAFB;
+            --light: #1F2937;
+            --gray-50: #0F172A;
+            --gray-100: #1E293B;
+            --gray-200: #334155;
+            --gray-300: #475569;
+            --gray-400: #64748B;
+            --gray-500: #94A3B8;
+            --gray-600: #CBD5E1;
+            --gray-700: #E2E8F0;
+            --gray-800: #F1F5F9;
+            --gray-900: #F8FAFC;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gray-50);
+            min-height: 100vh;
+            color: var(--gray-900);
+            overflow-x: hidden;
+            transition: background-color var(--transition-normal), color var(--transition-normal);
+        }
+
+        [data-theme="dark"] body {
+            background: var(--dark-bg);
+            color: var(--gray-100);
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(79, 70, 229, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 50%);
+            z-index: -1;
+            animation: backgroundShift 30s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+        }
+
+        /* Glassmorphism Base */
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-colored);
+            transition: all var(--transition-normal);
+        }
+
+        [data-theme="dark"] .glass {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            animation: fadeInUp 0.8s var(--transition-normal);
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+            animation: slideIn 0.5s var(--transition-normal);
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            line-height: 1.2;
+            color: var(--gray-900);
+        }
+
+        [data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, 
+        [data-theme="dark"] h4, [data-theme="dark"] h5, [data-theme="dark"] h6 {
+            color: var(--gray-100);
+        }
+
+        h1 { font-size: 3rem; font-weight: 800; }
+        h2 { font-size: 2.5rem; font-weight: 700; }
+        h3 { font-size: 2rem; font-weight: 600; }
+        h4 { font-size: 1.5rem; font-weight: 600; }
+        h5 { font-size: 1.25rem; font-weight: 600; }
+        h6 { font-size: 1rem; font-weight: 600; }
+
+        /* Login Screen */
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--gradient-primary);
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-2xl);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-2xl);
+            animation: fadeInUp 0.6s var(--transition-normal);
+        }
+
+        [data-theme="dark"] .login-card {
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        /* Navigation */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-lg);
+            border-radius: var(--radius-xl);
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            transition: all var(--transition-normal);
+        }
+
+        [data-theme="dark"] .navbar-custom {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100vh;
+            width: 280px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-lg);
+            transform: translateX(-100%);
+            transition: transform var(--transition-normal);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        [data-theme="dark"] .sidebar {
+            background: rgba(30, 41, 59, 0.95);
+            border-right: 1px solid rgba(51, 65, 85, 0.3);
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .sidebar-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: var(--gray-700);
+            text-decoration: none;
+            transition: all var(--transition-normal);
+            border-left: 3px solid transparent;
+        }
+
+        [data-theme="dark"] .sidebar-item {
+            color: var(--gray-300);
+        }
+
+        .sidebar-item:hover, .sidebar-item.active {
+            background: rgba(79, 70, 229, 0.1);
+            color: var(--primary);
+            border-left-color: var(--primary);
+        }
+
+        /* Dashboard Cards */
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius-xl);
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .dashboard-card {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform var(--transition-normal);
+        }
+
+        .dashboard-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Stats Cards */
+        .stats-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: var(--radius-xl);
+            padding: 30px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-normal);
+            cursor: pointer;
+        }
+
+        .stats-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+            opacity: 0;
+        }
+
+        .stats-card:hover::before {
+            animation: shine 0.6s ease-in-out;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        /* Buttons */
+        .btn {
+            border-radius: var(--radius-lg);
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all var(--transition-normal);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-colored);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        .btn-success {
+            background: var(--gradient-success);
+            color: white;
+            box-shadow: 0 10px 25px rgba(67, 233, 123, 0.3);
+        }
+
+        .btn-danger {
+            background: var(--gradient-secondary);
+            color: white;
+            box-shadow: 0 10px 25px rgba(236, 72, 153, 0.3);
+        }
+
+        .btn-warning {
+            background: var(--gradient-warm);
+            color: white;
+            box-shadow: 0 10px 25px rgba(245, 158, 11, 0.3);
+        }
+
+        /* Forms */
+        .form-control, .form-select {
+            border-radius: var(--radius-lg);
+            border: 2px solid var(--gray-300);
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            transition: all var(--transition-normal);
+            background: rgba(255,255,255,0.9);
+            box-shadow: var(--shadow-sm);
+        }
+
+        [data-theme="dark"] .form-control, [data-theme="dark"] .form-select {
+            background: rgba(30, 41, 59, 0.9);
+            border-color: var(--gray-600);
+            color: var(--gray-100);
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+            background: white;
+            transform: translateY(-2px);
+        }
+
+        [data-theme="dark"] .form-control:focus, [data-theme="dark"] .form-select:focus {
+            background: var(--dark-surface);
+            color: var(--gray-100);
+        }
+
+        /* Cards */
+        .card {
+            border: none;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-lg);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all var(--transition-normal);
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .card {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-2xl);
+        }
+
+        /* Notifications */
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: pulse 2s infinite;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all var(--transition-normal);
+            z-index: 1001;
+        }
+
+        [data-theme="dark"] .theme-toggle {
+            background: rgba(30, 41, 59, 0.9);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Charts */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 20px 0;
+        }
+
+        /* Progress Bars */
+        .progress-custom {
+            height: 8px;
+            border-radius: var(--radius-full);
+            background: var(--gray-200);
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] .progress-custom {
+            background: var(--gray-700);
+        }
+
+        .progress-bar-custom {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+            transition: width var(--transition-normal);
+        }
+
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-2xl);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        [data-theme="dark"] .chat-widget {
+            background: rgba(30, 41, 59, 0.95);
+        }
+
+        .chat-widget.open {
+            display: flex;
+        }
+
+        .chat-header {
+            padding: 15px 20px;
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .chat-input {
+            padding: 15px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        [data-theme="dark"] .chat-input {
+            border-top-color: var(--gray-700);
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-secondary);
+            color: white;
+            border: none;
+            box-shadow: var(--shadow-2xl);
+            font-size: 1.5rem;
+            transition: all var(--transition-normal);
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 25px 50px rgba(236, 72, 153, 0.4);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes shine {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) rotate(45deg);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) rotate(45deg);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 15px;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .chat-widget {
+                width: 100%;
+                height: 100%;
+                bottom: 0;
+                right: 0;
+                border-radius: 0;
+            }
+            
+            .fab {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        /* Utility Classes */
+        .text-gradient {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-colored);
+        }
+
+        [data-theme="dark"] .glass {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(51, 65, 85, 0.3);
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loading-spinner.show {
+            display: flex;
+        }
+
+        .spinner-content {
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius-xl);
+            text-align: center;
+            box-shadow: var(--shadow-2xl);
+        }
+
+        [data-theme="dark"] .spinner-content {
+            background: var(--dark-surface);
+            color: var(--gray-100);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+            border-radius: var(--radius-full);
+        }
+
+        [data-theme="dark"] ::-webkit-scrollbar-track {
+            background: var(--gray-800);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Search Box */
+        .search-box {
+            position: relative;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray-400);
+        }
+
+        .search-box input {
+            padding-left: 45px;
+        }
+
+        /* Exercise Item */
+        .exercise-item {
+            background: var(--gray-100);
+            border-radius: var(--radius-lg);
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 2px solid transparent;
+            transition: all var(--transition-normal);
+        }
+
+        [data-theme="dark"] .exercise-item {
+            background: var(--gray-800);
+        }
+
+        .exercise-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* Calendar */
+        .calendar-container {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 20px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        [data-theme="dark"] .calendar-container {
+            background: var(--dark-surface);
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            font-weight: 500;
+        }
+
+        .calendar-day:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .calendar-day.today {
+            background: var(--primary);
+            color: white;
+        }
+
+        .calendar-day.has-event {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* Nutrition Plan */
+        .meal-card {
+            background: var(--gray-100);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--accent);
+        }
+
+        [data-theme="dark"] .meal-card {
+            background: var(--gray-800);
+        }
+
+        /* Goal Progress */
+        .goal-item {
+            background: var(--gray-100);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        [data-theme="dark"] .goal-item {
+            background: var(--gray-800);
+        }
+
+        .goal-progress {
+            margin-top: 10px;
+        }
+
+        /* Financial Transaction */
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        [data-theme="dark"] .transaction-item {
+            border-bottom-color: var(--gray-700);
+        }
+
+        .transaction-item:last-child {
+            border-bottom: none;
+        }
+
+        .transaction-amount {
+            font-weight: 600;
+        }
+
+        .transaction-amount.income {
+            color: var(--accent);
+        }
+
+        .transaction-amount.expense {
+            color: var(--danger);
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" onclick="toggleTheme()">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <!-- Loading Spinner -->
+    <div class="loading-spinner" id="loadingSpinner">
+        <div class="spinner-content">
+            <div class="spinner-border text-primary mb-3" role="status">
+                <span class="visually-hidden">Carregando...</span>
+            </div>
+            <p>Processando...</p>
+        </div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="screen active">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="text-center mb-4">
+                    <i class="fas fa-dumbbell fa-3x text-gradient mb-3"></i>
+                    <h2 class="text-gradient">RotinaPlus Pro</h2>
+                    <p class="text-muted">Sistema Profissional de Gestão</p>
+                </div>
+                
+                <form id="loginForm">
+                    <div class="mb-3">
+                        <label class="form-label">
+                            <i class="fas fa-user me-1"></i> Usuário
+                        </label>
+                        <input type="text" class="form-control" id="loginUsername" required placeholder="Digite seu usuário">
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="form-label">
+                            <i class="fas fa-lock me-1"></i> Senha
+                        </label>
+                        <input type="password" class="form-control" id="loginPassword" required placeholder="Digite sua senha">
+                    </div>
+                    
+                    <div class="mb-4 form-check">
+                        <input type="checkbox" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">
+                            Lembrar-me
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100 mb-3">
+                        <i class="fas fa-sign-in-alt me-2"></i> Entrar
+                    </button>
+                    
+                    <div class="text-center">
+                        <a href="#" class="text-decoration-none" onclick="showNotification('Funcionalidade em desenvolvimento', 'info')">
+                            Esqueceu a senha?
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="p-4">
+            <div class="d-flex align-items-center mb-4">
+                <i class="fas fa-dumbbell fa-2x text-gradient me-3"></i>
+                <div>
+                    <h5 class="mb-0 text-gradient">RotinaPlus Pro</h5>
+                    <small class="text-muted">Gestão Profissional</small>
+                </div>
+            </div>
+            
+            <nav class="nav flex-column">
+                <a href="#" class="sidebar-item active" onclick="showScreen('dashboardScreen'); closeSidebar()">
+                    <i class="fas fa-tachometer-alt me-3"></i> Dashboard
+                </a>
+                <a href="#" class="sidebar-item" onclick="showScreen('studentManagementScreen'); closeSidebar()">
+                    <i class="fas fa-users me-3"></i> Alunos
+                </a>
+                <a href="#" class="sidebar-item" onclick="showScreen('seriesManagementScreen'); closeSidebar()">
+                    <i class="fas fa-dumbbell me-3"></i> Séries
+                </a>
+                <a href="#" class="sidebar-item" onclick="showScreen('schedulingScreen'); closeSidebar()">
+                    <i class="fas fa-calendar-alt me-3"></i> Agendamentos
+                </a>
+                <a href="#" class="sidebar-item" onclick="showScreen('financialScreen'); closeSidebar()">
+                    <i class="fas fa-dollar-sign me-3"></i> Financeiro
+                </a>
+                <a href="#" class="sidebar-item" onclick="showScreen('reportsScreen'); closeSidebar()">
+                    <i class="fas fa-chart-bar me-3"></i> Relatórios
+                </a>
+                <a href="#" class="sidebar-item" onclick="showScreen('nutritionScreen'); closeSidebar()">
+                    <i class="fas fa-apple-alt me-3"></i> Nutrição
+                </a>
+                <a href="#" class="sidebar-item" onclick="showScreen('goalsScreen'); closeSidebar()">
+                    <i class="fas fa-trophy me-3"></i> Metas
+                </a>
+                <a href="#" class="sidebar-item" onclick="showScreen('settingsScreen'); closeSidebar()">
+                    <i class="fas fa-cog me-3"></i> Configurações
+                </a>
+            </nav>
+        </div>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="main-container">
+        <!-- Dashboard Screen -->
+        <div id="dashboardScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-3" onclick="toggleSidebar()">
+                            <i class="fas fa-bars"></i>
+                        </button>
+                        <h3 class="mb-0">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </h3>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <button class="btn btn-outline-primary position-relative" onclick="showNotifications()">
+                            <i class="fas fa-bell"></i>
+                            <span class="notification-badge">3</span>
+                        </button>
+                        <button class="btn btn-outline-primary" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stats-card" onclick="showScreen('studentManagementScreen')">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3 class="mb-1" id="totalStudents">0</h3>
+                                <p class="mb-0 opacity-75">Alunos Ativos</p>
+                            </div>
+                            <i class="fas fa-users fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);" onclick="showScreen('seriesManagementScreen')">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3 class="mb-1" id="totalSeries">0</h3>
+                                <p class="mb-0 opacity-75">Séries Criadas</p>
+                            </div>
+                            <i class="fas fa-dumbbell fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);" onclick="showScreen('financialScreen')">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3 class="mb-1">R$ <span id="monthlyRevenue">0</span></h3>
+                                <p class="mb-0 opacity-75">Receita Mensal</p>
+                            </div>
+                            <i class="fas fa-dollar-sign fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stats-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);" onclick="showScreen('schedulingScreen')">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h3 class="mb-1" id="todaySchedules">0</h3>
+                                <p class="mb-0 opacity-75">Agendamentos Hoje</p>
+                            </div>
+                            <i class="fas fa-calendar-check fa-2x opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row mb-4">
+                <div class="col-lg-8 mb-3">
+                    <div class="dashboard-card">
+                        <h5 class="mb-3">
+                            <i class="fas fa-chart-line me-2"></i> Evolução Mensal
+                        </h5>
+                        <div class="chart-container">
+                            <canvas id="evolutionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <div class="dashboard-card">
+                        <h5 class="mb-3">
+                            <i class="fas fa-chart-pie me-2"></i> Distribuição
+                        </h5>
+                        <div class="chart-container">
+                            <canvas id="distributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activities -->
+            <div class="row">
+                <div class="col-lg-6 mb-3">
+                    <div class="dashboard-card">
+                        <h5 class="mb-3">
+                            <i class="fas fa-clock me-2"></i> Atividades Recentes
+                        </h5>
+                        <div id="recentActivities">
+                            <div class="d-flex align-items-center mb-3 p-3 bg-light rounded-lg">
+                                <i class="fas fa-user-plus text-primary me-3"></i>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">Novo aluno cadastrado</h6>
+                                    <small class="text-muted">João Silva - há 2 horas</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-3 p-3 bg-light rounded-lg">
+                                <i class="fas fa-dumbbell text-warning me-3"></i>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">Série atualizada</h6>
+                                    <small class="text-muted">Treino A - há 5 horas</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center p-3 bg-light rounded-lg">
+                                <i class="fas fa-dollar-sign text-success me-3"></i>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">Pagamento recebido</h6>
+                                    <small class="text-muted">Maria Santos - há 1 dia</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-3">
+                    <div class="dashboard-card">
+                        <h5 class="mb-3">
+                            <i class="fas fa-calendar-day me-2"></i> Próximos Agendamentos
+                        </h5>
+                        <div id="upcomingSchedules">
+                            <div class="d-flex align-items-center mb-3 p-3 bg-light rounded-lg">
+                                <div class="text-center me-3">
+                                    <div class="badge bg-primary">14:00</div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">João Silva</h6>
+                                    <small class="text-muted">Treino Peito + Tríceps</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center mb-3 p-3 bg-light rounded-lg">
+                                <div class="text-center me-3">
+                                    <div class="badge bg-primary">15:30</div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">Maria Santos</h6>
+                                    <small class="text-muted">Treino Pernas</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center p-3 bg-light rounded-lg">
+                                <div class="text-center me-3">
+                                    <div class="badge bg-primary">17:00</div>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">Pedro Oliveira</h6>
+                                    <small class="text-muted">Avaliação Física</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Management Screen -->
+        <div id="studentManagementScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-3" onclick="showScreen('dashboardScreen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 class="mb-0">
+                            <i class="fas fa-users me-2"></i> Gerenciar Alunos
+                        </h3>
+                    </div>
+                    <button class="btn btn-primary" onclick="showScreen('studentFormScreen')">
+                        <i class="fas fa-plus me-2"></i> Novo Aluno
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" class="form-control" id="searchStudents" placeholder="Buscar alunos..." onkeyup="searchStudents()">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-select" onchange="filterStudents(this.value)">
+                                <option value="all">Todos os Alunos</option>
+                                <option value="active">Alunos Ativos</option>
+                                <option value="inactive">Alunos Inativos</option>
+                                <option value="overdue">Inadimplentes</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Contato</th>
+                                    <th>Plano</th>
+                                    <th>Status</th>
+                                    <th>Último Pagamento</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody">
+                                <!-- Students will be populated here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Form Screen -->
+        <div id="studentFormScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-primary" onclick="showScreen('studentManagementScreen')">
+                        <i class="fas fa-arrow-left me-2"></i> Voltar
+                    </button>
+                    <h3 class="mb-0">
+                        <i class="fas fa-user-edit me-2"></i> <span id="studentFormTitle">Novo Aluno</span>
+                    </h3>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form id="studentForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-user me-1"></i> Nome Completo *
+                                </label>
+                                <input type="text" class="form-control" id="studentName" required placeholder="Digite o nome completo">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">
+                                    <i class="fas fa-id-card me-1"></i> CPF
+                                </label>
+                                <input type="text" class="form-control" id="studentCPF" placeholder="000.000.000-00">
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label class="form-label">
+                                    <i class="fas fa-envelope me-1"></i> Email
+                                </label>
+                                <input type="email" class="form-control" id="studentEmail" placeholder="email@exemplo.com">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">
+                                    <i class="fas fa-phone me-1"></i> Telefone
+                                </label>
+                                <input type="tel" class="form-control" id="studentPhone" placeholder="(00) 00000-0000">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">
+                                    <i class="fas fa-birthday-cake me-1"></i> Data Nascimento
+                                </label>
+                                <input type="date" class="form-control" id="studentBirthDate">
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-weight me-1"></i> Peso (kg)
+                                </label>
+                                <input type="number" step="0.1" class="form-control" id="studentWeight" placeholder="kg">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-ruler-vertical me-1"></i> Altura (cm)
+                                </label>
+                                <input type="number" class="form-control" id="studentHeight" placeholder="cm">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-percentage me-1"></i> % Gordura
+                                </label>
+                                <input type="number" step="0.1" class="form-control" id="studentBodyFat" placeholder="%">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">
+                                    <i class="fas fa-heartbeat me-1"></i> IMC
+                                </label>
+                                <input type="text" class="form-control" id="studentBMI" readonly placeholder="Calculado">
+                            </div>
+                        </div>
+
+                        <div class="mt-3">
+                            <label class="form-label">
+                                <i class="fas fa-sticky-note me-1"></i> Observações
+                            </label>
+                            <textarea class="form-control" id="studentNotes" rows="3" placeholder="Observações importantes sobre o aluno..."></textarea>
+                        </div>
+
+                        <div class="mt-4">
+                            <h6 class="mb-3">
+                                <i class="fas fa-calendar-alt me-2"></i> Dias de Frequência
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check form-check-inline d-block mb-3">
+                                        <input class="form-check-input" type="checkbox" value="1" id="day1">
+                                        <label class="form-check-label" for="day1">
+                                            <i class="fas fa-calendar-day me-1"></i> Segunda-feira
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline d-block mb-3">
+                                        <input class="form-check-input" type="checkbox" value="2" id="day2">
+                                        <label class="form-check-label" for="day2">
+                                            <i class="fas fa-calendar-day me-1"></i> Terça-feira
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline d-block mb-3">
+                                        <input class="form-check-input" type="checkbox" value="3" id="day3">
+                                        <label class="form-check-label" for="day3">
+                                            <i class="fas fa-calendar-day me-1"></i> Quarta-feira
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline d-block mb-3">
+                                        <input class="form-check-input" type="checkbox" value="4" id="day4">
+                                        <label class="form-check-label" for="day4">
+                                            <i class="fas fa-calendar-day me-1"></i> Quinta-feira
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check form-check-inline d-block mb-3">
+                                        <input class="form-check-input" type="checkbox" value="5" id="day5">
+                                        <label class="form-check-label" for="day5">
+                                            <i class="fas fa-calendar-day me-1"></i> Sexta-feira
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline d-block mb-3">
+                                        <input class="form-check-input" type="checkbox" value="6" id="day6">
+                                        <label class="form-check-label" for="day6">
+                                            <i class="fas fa-calendar-day me-1"></i> Sábado
+                                        </label>
+                                    </div>
+                                    <div class="form-check form-check-inline d-block mb-3">
+                                        <input class="form-check-input" type="checkbox" value="7" id="day7">
+                                        <label class="form-check-label" for="day7">
+                                            <i class="fas fa-calendar-day me-1"></i> Domingo
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h6 class="mb-3">
+                                <i class="fas fa-credit-card me-2"></i> Plano e Pagamento
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Plano</label>
+                                    <select class="form-select" id="studentPlan">
+                                        <option value="basic">Básico</option>
+                                        <option value="premium">Premium</option>
+                                        <option value="vip">VIP</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Valor Mensal</label>
+                                    <input type="number" step="0.01" class="form-control" id="studentPlanValue" placeholder="R$ 0,00">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showScreen('studentManagementScreen')">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i> Salvar Aluno
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Series Management Screen -->
+        <div id="seriesManagementScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-3" onclick="showScreen('dashboardScreen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 class="mb-0">
+                            <i class="fas fa-dumbbell me-2"></i> Gerenciar Séries
+                        </h3>
+                    </div>
+                    <button class="btn btn-primary" onclick="showScreen('seriesFormScreen')">
+                        <i class="fas fa-plus me-2"></i> Nova Série
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" class="form-control" id="searchSeries" placeholder="Buscar séries..." onkeyup="searchSeries()">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-select" onchange="filterSeries(this.value)">
+                                <option value="all">Todas as Séries</option>
+                                <option value="strength">Força</option>
+                                <option value="cardio">Cardio</option>
+                                <option value="flexibility">Flexibilidade</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row" id="seriesContainer">
+                        <!-- Series will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Series Form Screen -->
+        <div id="seriesFormScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-primary" onclick="showScreen('seriesManagementScreen')">
+                        <i class="fas fa-arrow-left me-2"></i> Voltar
+                    </button>
+                    <h3 class="mb-0">
+                        <i class="fas fa-dumbbell me-2"></i> <span id="seriesFormTitle">Nova Série</span>
+                    </h3>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form id="seriesForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Nome da Série *</label>
+                                <input type="text" class="form-control" id="seriesName" required placeholder="Ex: Treino A - Peito e Tríceps">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tipo</label>
+                                <select class="form-select" id="seriesType">
+                                    <option value="strength">Força</option>
+                                    <option value="cardio">Cardio</option>
+                                    <option value="flexibility">Flexibilidade</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Descrição</label>
+                                <textarea class="form-control" id="seriesDescription" rows="3" placeholder="Descrição da série de treino..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h6 class="mb-3">Exercícios</h6>
+                            <div id="exercisesContainer">
+                                <div class="exercise-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-4">
+                                            <input type="text" class="form-control" placeholder="Nome do exercício">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="number" class="form-control" placeholder="Séries">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="number" class="form-control" placeholder="Repetições">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input type="text" class="form-control" placeholder="Descanso">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="removeExercise(this)">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary mt-3" onclick="addExercise()">
+                                <i class="fas fa-plus me-2"></i> Adicionar Exercício
+                            </button>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showScreen('seriesManagementScreen')">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i> Salvar Série
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheduling Screen -->
+        <div id="schedulingScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-3" onclick="showScreen('dashboardScreen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 class="mb-0">
+                            <i class="fas fa-calendar-alt me-2"></i> Agendamentos
+                        </h3>
+                    </div>
+                    <button class="btn btn-primary" onclick="showScreen('schedulingFormScreen')">
+                        <i class="fas fa-plus me-2"></i> Novo Agendamento
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="calendar-container">
+                                <div class="calendar-header">
+                                    <button class="btn btn-outline-primary" onclick="previousMonth()">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <h5 id="currentMonth">Janeiro 2024</h5>
+                                    <button class="btn btn-outline-primary" onclick="nextMonth()">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                                <div class="calendar-grid" id="calendarGrid">
+                                    <!-- Calendar will be populated here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="mb-3">Agendamentos do Dia</h5>
+                            <div id="daySchedules">
+                                <!-- Day schedules will be populated here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scheduling Form Screen -->
+        <div id="schedulingFormScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-primary" onclick="showScreen('schedulingScreen')">
+                        <i class="fas fa-arrow-left me-2"></i> Voltar
+                    </button>
+                    <h3 class="mb-0">
+                        <i class="fas fa-calendar-plus me-2"></i> Novo Agendamento
+                    </h3>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form id="schedulingForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Aluno</label>
+                                <select class="form-select" id="scheduleStudent" required>
+                                    <option value="">Selecione um aluno</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tipo</label>
+                                <select class="form-select" id="scheduleType" required>
+                                    <option value="training">Treino</option>
+                                    <option value="assessment">Avaliação</option>
+                                    <option value="consultation">Consulta</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Data</label>
+                                <input type="date" class="form-control" id="scheduleDate" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Horário</label>
+                                <input type="time" class="form-control" id="scheduleTime" required>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="scheduleNotes" rows="3" placeholder="Observações sobre o agendamento..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showScreen('schedulingScreen')">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i> Salvar Agendamento
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Screen -->
+        <div id="financialScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-3" onclick="showScreen('dashboardScreen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 class="mb-0">
+                            <i class="fas fa-dollar-sign me-2"></i> Financeiro
+                        </h3>
+                    </div>
+                    <div>
+                        <button class="btn btn-success me-2" onclick="showScreen('financialFormScreen', 'income')">
+                            <i class="fas fa-plus me-2"></i> Receita
+                        </button>
+                        <button class="btn btn-danger" onclick="showScreen('financialFormScreen', 'expense')">
+                            <i class="fas fa-minus me-2"></i> Despesa
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="text-success">Receitas</h5>
+                            <h3 id="totalIncome">R$ 0,00</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="text-danger">Despesas</h5>
+                            <h3 id="totalExpenses">R$ 0,00</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="text-primary">Saldo</h5>
+                            <h3 id="totalBalance">R$ 0,00</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="text-warning">Pendentes</h5>
+                            <h3 id="pendingPayments">R$ 0,00</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <input type="month" class="form-control" id="financialMonth" onchange="filterFinancialByMonth()">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" onchange="filterFinancialByType(this.value)">
+                                <option value="all">Todos</option>
+                                <option value="income">Receitas</option>
+                                <option value="expense">Despesas</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" class="form-control" placeholder="Buscar transações..." onkeyup="searchFinancial()">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="financialTransactions">
+                        <!-- Transactions will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Form Screen -->
+        <div id="financialFormScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-primary" onclick="showScreen('financialScreen')">
+                        <i class="fas fa-arrow-left me-2"></i> Voltar
+                    </button>
+                    <h3 class="mb-0">
+                        <i class="fas fa-money-bill-wave me-2"></i> <span id="financialFormTitle">Nova Transação</span>
+                    </h3>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form id="financialForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Descrição</label>
+                                <input type="text" class="form-control" id="financialDescription" required placeholder="Descrição da transação">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Categoria</label>
+                                <select class="form-select" id="financialCategory" required>
+                                    <option value="">Selecione uma categoria</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Valor</label>
+                                <input type="number" step="0.01" class="form-control" id="financialAmount" required placeholder="R$ 0,00">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Data</label>
+                                <input type="date" class="form-control" id="financialDate" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Forma de Pagamento</label>
+                                <select class="form-select" id="financialPaymentMethod">
+                                    <option value="cash">Dinheiro</option>
+                                    <option value="card">Cartão</option>
+                                    <option value="transfer">Transferência</option>
+                                    <option value="pix">PIX</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Observações</label>
+                                <textarea class="form-control" id="financialNotes" rows="3" placeholder="Observações sobre a transação..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showScreen('financialScreen')">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i> Salvar Transação
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Screen -->
+        <div id="reportsScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-3" onclick="showScreen('dashboardScreen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 class="mb-0">
+                            <i class="fas fa-chart-bar me-2"></i> Relatórios
+                        </h3>
+                    </div>
+                    <button class="btn btn-primary" onclick="generateReport()">
+                        <i class="fas fa-download me-2"></i> Exportar
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="mb-3">Tipo de Relatório</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="reportType" id="reportStudents" value="students" checked>
+                                <label class="form-check-label" for="reportStudents">
+                                    Relatório de Alunos
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="reportType" id="reportFinancial" value="financial">
+                                <label class="form-check-label" for="reportFinancial">
+                                    Relatório Financeiro
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="reportType" id="reportAttendance" value="attendance">
+                                <label class="form-check-label" for="reportAttendance">
+                                    Relatório de Frequência
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="reportType" id="reportGoals" value="goals">
+                                <label class="form-check-label" for="reportGoals">
+                                    Relatório de Metas
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="mb-3">Filtros</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="form-label">Período</label>
+                                    <select class="form-select" id="reportPeriod">
+                                        <option value="month">Último mês</option>
+                                        <option value="quarter">Último trimestre</option>
+                                        <option value="semester">Último semestre</option>
+                                        <option value="year">Último ano</option>
+                                        <option value="custom">Personalizado</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Formato</label>
+                                    <select class="form-select" id="reportFormat">
+                                        <option value="pdf">PDF</option>
+                                        <option value="excel">Excel</option>
+                                        <option value="csv">CSV</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mt-3" id="customPeriod" style="display: none;">
+                                <div class="col-md-6">
+                                    <label class="form-label">Data Início</label>
+                                    <input type="date" class="form-control" id="reportStartDate">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Data Fim</label>
+                                    <input type="date" class="form-control" id="reportEndDate">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-4">
+                <div class="card-body">
+                    <h5 class="mb-3">Pré-visualização</h5>
+                    <div id="reportPreview">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Selecione o tipo de relatório e os filtros para visualizar os dados.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nutrition Screen -->
+        <div id="nutritionScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-3" onclick="showScreen('dashboardScreen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 class="mb-0">
+                            <i class="fas fa-apple-alt me-2"></i> Nutrição
+                        </h3>
+                    </div>
+                    <button class="btn btn-primary" onclick="showScreen('nutritionFormScreen')">
+                        <i class="fas fa-plus me-2"></i> Novo Plano
+                    </button>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" placeholder="Buscar planos..." onkeyup="searchNutrition()">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <select class="form-select" onchange="filterNutrition(this.value)">
+                        <option value="all">Todos os Planos</option>
+                        <option value="weight-loss">Emagrecimento</option>
+                        <option value="muscle-gain">Hipertrofia</option>
+                        <option value="maintenance">Manutenção</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row" id="nutritionPlans">
+                <!-- Nutrition plans will be populated here -->
+            </div>
+        </div>
+
+        <!-- Nutrition Form Screen -->
+        <div id="nutritionFormScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-primary" onclick="showScreen('nutritionScreen')">
+                        <i class="fas fa-arrow-left me-2"></i> Voltar
+                    </button>
+                    <h3 class="mb-0">
+                        <i class="fas fa-utensils me-2"></i> <span id="nutritionFormTitle">Novo Plano Nutricional</span>
+                    </h3>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form id="nutritionForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Nome do Plano</label>
+                                <input type="text" class="form-control" id="nutritionName" required placeholder="Ex: Plano de Emagrecimento">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Objetivo</label>
+                                <select class="form-select" id="nutritionGoal" required>
+                                    <option value="weight-loss">Emagrecimento</option>
+                                    <option value="muscle-gain">Hipertrofia</option>
+                                    <option value="maintenance">Manutenção</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Calorias Diárias</label>
+                                <input type="number" class="form-control" id="nutritionCalories" placeholder="2000">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Proteínas (g)</label>
+                                <input type="number" class="form-control" id="nutritionProtein" placeholder="150">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Carboidratos (g)</label>
+                                <input type="number" class="form-control" id="nutritionCarbs" placeholder="250">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Gorduras (g)</label>
+                                <input type="number" class="form-control" id="nutritionFats" placeholder="70">
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <h6 class="mb-3">Refeições</h6>
+                            <div id="mealsContainer">
+                                <div class="meal-card">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6>Café da Manhã</h6>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="removeMeal(this)">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                    <textarea class="form-control" rows="2" placeholder="Descrição da refeição..."></textarea>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-outline-primary mt-3" onclick="addMeal()">
+                                <i class="fas fa-plus me-2"></i> Adicionar Refeição
+                            </button>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showScreen('nutritionScreen')">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i> Salvar Plano
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Goals Screen -->
+        <div id="goalsScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-3" onclick="showScreen('dashboardScreen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 class="mb-0">
+                            <i class="fas fa-trophy me-2"></i> Metas
+                        </h3>
+                    </div>
+                    <button class="btn btn-primary" onclick="showScreen('goalsFormScreen')">
+                        <i class="fas fa-plus me-2"></i> Nova Meta
+                    </button>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" class="form-control" placeholder="Buscar metas..." onkeyup="searchGoals()">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <select class="form-select" onchange="filterGoals(this.value)">
+                        <option value="all">Todas as Metas</option>
+                        <option value="active">Ativas</option>
+                        <option value="completed">Concluídas</option>
+                        <option value="expired">Expiradas</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row" id="goalsContainer">
+                <!-- Goals will be populated here -->
+            </div>
+        </div>
+
+        <!-- Goals Form Screen -->
+        <div id="goalsFormScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <button class="btn btn-outline-primary" onclick="showScreen('goalsScreen')">
+                        <i class="fas fa-arrow-left me-2"></i> Voltar
+                    </button>
+                    <h3 class="mb-0">
+                        <i class="fas fa-bullseye me-2"></i> <span id="goalsFormTitle">Nova Meta</span>
+                    </h3>
+                    <div></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <form id="goalsForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label class="form-label">Aluno</label>
+                                <select class="form-select" id="goalStudent" required>
+                                    <option value="">Selecione um aluno</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tipo de Meta</label>
+                                <select class="form-select" id="goalType" required>
+                                    <option value="weight-loss">Perda de Peso</option>
+                                    <option value="muscle-gain">Ganho de Massa</option>
+                                    <option value="strength">Aumento de Força</option>
+                                    <option value="endurance">Resistência</option>
+                                    <option value="flexibility">Flexibilidade</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Descrição</label>
+                                <input type="text" class="form-control" id="goalDescription" required placeholder="Descrição da meta...">
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Valor Inicial</label>
+                                <input type="number" step="0.1" class="form-control" id="goalInitialValue" required placeholder="0">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Meta Final</label>
+                                <input type="number" step="0.1" class="form-control" id="goalTargetValue" required placeholder="0">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Data Limite</label>
+                                <input type="date" class="form-control" id="goalDeadline" required>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <label class="form-label">Unidade de Medida</label>
+                                <select class="form-select" id="goalUnit">
+                                    <option value="kg">kg</option>
+                                    <option value="lb">lb</option>
+                                    <option value="cm">cm</option>
+                                    <option value="in">in</option>
+                                    <option value="min">minutos</option>
+                                    <option value="reps">repetições</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 text-end">
+                            <button type="button" class="btn btn-secondary me-2" onclick="showScreen('goalsScreen')">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i> Salvar Meta
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Screen -->
+        <div id="settingsScreen" class="screen">
+            <div class="navbar-custom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-primary me-3" onclick="showScreen('dashboardScreen')">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <h3 class="mb-0">
+                            <i class="fas fa-cog me-2"></i> Configurações
+                        </h3>
+                    </div>
+                    <button class="btn btn-primary" onclick="saveSettings()">
+                        <i class="fas fa-save me-2"></i> Salvar
+                    </button>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Configurações Gerais</h5>
+                            <div class="mb-3">
+                                <label class="form-label">Nome da Academia</label>
+                                <input type="text" class="form-control" id="gymName" value="RotinaPlus Pro">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Telefone</label>
+                                <input type="tel" class="form-control" id="gymPhone" placeholder="(00) 00000-0000">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" class="form-control" id="gymEmail" placeholder="contato@academia.com">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Endereço</label>
+                                <textarea class="form-control" id="gymAddress" rows="2" placeholder="Endereço completo..."></textarea>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h5 class="mb-3">Preferências</h5>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                    <label class="form-check-label" for="emailNotifications">
+                                        Notificações por Email
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="autoBackup" checked>
+                                    <label class="form-check-label" for="autoBackup">
+                                        Backup Automático
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="darkModeDefault">
+                                    <label class="form-check-label" for="darkModeDefault">
+                                        Modo Escuro Padrão
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="smsNotifications">
+                                    <label class="form-check-label" for="smsNotifications">
+                                        Notificações por SMS
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget" id="chatWidget">
+        <div class="chat-header">
+            <h5 class="mb-0">Suporte</h5>
+            <button class="btn btn-sm btn-light" onclick="toggleChat()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                Olá! Como posso ajudar você hoje?
+            </div>
+        </div>
+        <div class="chat-input">
+            <div class="input-group">
+                <input type="text" class="form-control" id="chatInput" placeholder="Digite sua mensagem..." onkeypress="handleChatKeyPress(event)">
+                <button class="btn btn-primary" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="toggleChat()">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <script>
+        // Data Storage
+        let students = [];
+        let series = [];
+        let schedules = [];
+        let financialTransactions = [];
+        let nutritionPlans = [];
+        let goals = [];
+        let currentUser = null;
+        let evolutionChart = null;
+        let distributionChart = null;
+        let currentMonth = new Date();
+        let selectedDate = new Date();
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+            loadSampleData();
+            initializeCharts();
+            updateDashboardStats();
+            initializeCalendar();
+            populateFinancialCategories();
+        });
+
+        function initializeApp() {
+            // Check for saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+            }
+
+            // Setup login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Setup student form
+            document.getElementById('studentForm').addEventListener('submit', handleStudentSubmit);
+            
+            // Setup series form
+            document.getElementById('seriesForm').addEventListener('submit', handleSeriesSubmit);
+            
+            // Setup scheduling form
+            document.getElementById('schedulingForm').addEventListener('submit', handleSchedulingSubmit);
+            
+            // Setup financial form
+            document.getElementById('financialForm').addEventListener('submit', handleFinancialSubmit);
+            
+            // Setup nutrition form
+            document.getElementById('nutritionForm').addEventListener('submit', handleNutritionSubmit);
+            
+            // Setup goals form
+            document.getElementById('goalsForm').addEventListener('submit', handleGoalsSubmit);
+
+            // Setup BMI calculation
+            document.getElementById('studentWeight').addEventListener('input', calculateBMI);
+            document.getElementById('studentHeight').addEventListener('input', calculateBMI);
+
+            // Setup report period
+            document.getElementById('reportPeriod').addEventListener('change', function() {
+                const customPeriod = document.getElementById('customPeriod');
+                if (this.value === 'custom') {
+                    customPeriod.style.display = 'block';
+                } else {
+                    customPeriod.style.display = 'none';
+                }
+            });
+
+            // Setup financial month filter
+            const now = new Date();
+            document.getElementById('financialMonth').value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+        }
+
+        function loadSampleData() {
+            // Load sample students
+            students = [
+                {
+                    id: 1,
+                    name: 'João Silva',
+                    email: 'joao@email.com',
+                    phone: '(11) 99999-9999',
+                    cpf: '123.456.789-00',
+                    birthDate: '1990-01-01',
+                    weight: 75.5,
+                    height: 175,
+                    bodyFat: 15.2,
+                    plan: 'premium',
+                    planValue: 299.90,
+                    status: 'active',
+                    lastPayment: '2024-01-15',
+                    notes: 'Aluno dedicado, focado em hipertrofia.',
+                    frequencyDays: [1, 3, 5]
+                },
+                {
+                    id: 2,
+                    name: 'Maria Santos',
+                    email: 'maria@email.com',
+                    phone: '(11) 98888-8888',
+                    cpf: '987.654.321-00',
+                    birthDate: '1985-05-15',
+                    weight: 62.0,
+                    height: 165,
+                    bodyFat: 22.1,
+                    plan: 'basic',
+                    planValue: 149.90,
+                    status: 'active',
+                    lastPayment: '2024-01-10',
+                    notes: 'Objetivo: emagrecimento saudável.',
+                    frequencyDays: [2, 4, 6]
+                },
+                {
+                    id: 3,
+                    name: 'Pedro Oliveira',
+                    email: 'pedro@email.com',
+                    phone: '(11) 97777-7777',
+                    cpf: '456.789.123-00',
+                    birthDate: '1992-08-20',
+                    weight: 85.0,
+                    height: 180,
+                    bodyFat: 18.5,
+                    plan: 'vip',
+                    planValue: 499.90,
+                    status: 'overdue',
+                    lastPayment: '2023-12-01',
+                    notes: 'Atleta, preparação para competição.',
+                    frequencyDays: [1, 2, 3, 4, 5, 6]
+                }
+            ];
+
+            // Load sample series
+            series = [
+                {
+                    id: 1,
+                    name: 'Treino A - Peito e Tríceps',
+                    type: 'strength',
+                    description: 'Treino focado em desenvolvimento de peito e tríceps',
+                    exercises: [
+                        { name: 'Supino Reto', sets: 4, reps: 10, rest: '60s' },
+                        { name: 'Crucifixo', sets: 3, reps: 12, rest: '45s' },
+                        { name: 'Tríceps Testa', sets: 3, reps: 15, rest: '45s' }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: 'Treino B - Costas e Bíceps',
+                    type: 'strength',
+                    description: 'Treino para desenvolvimento de costas e bíceps',
+                    exercises: [
+                        { name: 'Barra Fixa', sets: 4, reps: 8, rest: '90s' },
+                        { name: 'Remada Curvada', sets: 4, reps: 12, rest: '60s' },
+                        { name: 'Rosca Alternada', sets: 3, reps: 12, rest: '45s' }
+                    ]
+                },
+                {
+                    id: 3,
+                    name: 'Cardio Intenso',
+                    type: 'cardio',
+                    description: 'Sessão de cardio de alta intensidade',
+                    exercises: [
+                        { name: 'Esteira', sets: 1, reps: 30, rest: '0s' },
+                        { name: 'Bicicleta', sets: 1, reps: 20, rest: '0s' }
+                    ]
+                }
+            ];
+
+            // Load sample schedules
+            const today = new Date();
+            schedules = [
+                {
+                    id: 1,
+                    studentId: 1,
+                    studentName: 'João Silva',
+                    type: 'training',
+                    date: today.toISOString().split('T')[0],
+                    time: '14:00',
+                    notes: 'Treino A - Peito e Tríceps',
+                    status: 'scheduled'
+                },
+                {
+                    id: 2,
+                    studentId: 2,
+                    studentName: 'Maria Santos',
+                    type: 'training',
+                    date: today.toISOString().split('T')[0],
+                    time: '15:30',
+                    notes: 'Treino de Pernas',
+                    status: 'scheduled'
+                },
+                {
+                    id: 3,
+                    studentId: 3,
+                    studentName: 'Pedro Oliveira',
+                    type: 'assessment',
+                    date: today.toISOString().split('T')[0],
+                    time: '17:00',
+                    notes: 'Avaliação física mensal',
+                    status: 'scheduled'
+                }
+            ];
+
+            // Load sample financial transactions
+            financialTransactions = [
+                {
+                    id: 1,
+                    description: 'Mensalidade - João Silva',
+                    category: 'mensalidade',
+                    amount: 299.90,
+                    type: 'income',
+                    date: '2024-01-15',
+                    paymentMethod: 'card',
+                    notes: 'Pagamento mensalidade plano premium'
+                },
+                {
+                    id: 2,
+                    description: 'Mensalidade - Maria Santos',
+                    category: 'mensalidade',
+                    amount: 149.90,
+                    type: 'income',
+                    date: '2024-01-10',
+                    paymentMethod: 'pix',
+                    notes: 'Pagamento mensalidade plano básico'
+                },
+                {
+                    id: 3,
+                    description: 'Aluguel',
+                    category: 'aluguel',
+                    amount: 3000.00,
+                    type: 'expense',
+                    date: '2024-01-05',
+                    paymentMethod: 'transfer',
+                    notes: 'Pagamento aluguel academia'
+                },
+                {
+                    id: 4,
+                    description: 'Compra de Equipamentos',
+                    category: 'equipamentos',
+                    amount: 1500.00,
+                    type: 'expense',
+                    date: '2024-01-08',
+                    paymentMethod: 'card',
+                    notes: 'Compra de halteres e barras'
+                }
+            ];
+
+            // Load sample nutrition plans
+            nutritionPlans = [
+                {
+                    id: 1,
+                    name: 'Plano de Emagrecimento',
+                    goal: 'weight-loss',
+                    calories: 1800,
+                    protein: 120,
+                    carbs: 180,
+                    fats: 60,
+                    meals: [
+                        { name: 'Café da Manhã', description: '2 ovos + 1 fatia de pão integral + café sem açúcar' },
+                        { name: 'Almoço', description: '150g frango grelhado + salada variada + 2 col arroz integral' },
+                        { name: 'Jantar', description: 'Peixe grelhado + legumes cozidos' }
+                    ]
+                },
+                {
+                    id: 2,
+                    name: 'Plano de Hipertrofia',
+                    goal: 'muscle-gain',
+                    calories: 2800,
+                    protein: 180,
+                    carbs: 300,
+                    fats: 90,
+                    meals: [
+                        { name: 'Café da Manhã', description: '4 ovos + aveia + banana + whey protein' },
+                        { name: 'Almoço', description: '200g frango + arroz branco + feijão + batata doce' },
+                        { name: 'Lanche', description: 'Mix de castanhas + iogurte grego' },
+                        { name: 'Jantar', description: 'Carne vermelha + batata doce + brócolis' }
+                    ]
+                }
+            ];
+
+            // Load sample goals
+            goals = [
+                {
+                    id: 1,
+                    studentId: 1,
+                    studentName: 'João Silva',
+                    type: 'muscle-gain',
+                    description: 'Aumentar massa muscular',
+                    initialValue: 75.5,
+                    targetValue: 80.0,
+                    currentValue: 77.2,
+                    unit: 'kg',
+                    deadline: '2024-06-01',
+                    status: 'active',
+                    createdAt: '2024-01-01'
+                },
+                {
+                    id: 2,
+                    studentId: 2,
+                    studentName: 'Maria Santos',
+                    type: 'weight-loss',
+                    description: 'Perder peso',
+                    initialValue: 65.0,
+                    targetValue: 58.0,
+                    currentValue: 62.0,
+                    unit: 'kg',
+                    deadline: '2024-05-01',
+                    status: 'active',
+                    createdAt: '2024-01-01'
+                },
+                {
+                    id: 3,
+                    studentId: 3,
+                    studentName: 'Pedro Oliveira',
+                    type: 'strength',
+                    description: 'Aumentar força no supino',
+                    initialValue: 80,
+                    targetValue: 100,
+                    currentValue: 90,
+                    unit: 'kg',
+                    deadline: '2024-04-01',
+                    status: 'active',
+                    createdAt: '2024-01-01'
+                }
+            ];
+
+            // Populate forms and tables
+            populateStudentsTable();
+            populateSeries();
+            populateSchedules();
+            populateFinancial();
+            populateNutrition();
+            populateGoals();
+            populateStudentSelects();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (username && password) {
+                currentUser = { username: username };
+                showScreen('dashboardScreen');
+                showNotification('Login realizado com sucesso!', 'success');
+            } else {
+                showNotification('Por favor, preencha todos os campos.', 'error');
+            }
+        }
+
+        function handleStudentSubmit(e) {
+            e.preventDefault();
+            
+            const studentData = {
+                id: Date.now(),
+                name: document.getElementById('studentName').value,
+                email: document.getElementById('studentEmail').value,
+                phone: document.getElementById('studentPhone').value,
+                cpf: document.getElementById('studentCPF').value,
+                birthDate: document.getElementById('studentBirthDate').value,
+                weight: parseFloat(document.getElementById('studentWeight').value) || 0,
+                height: parseInt(document.getElementById('studentHeight').value) || 0,
+                bodyFat: parseFloat(document.getElementById('studentBodyFat').value) || 0,
+                plan: document.getElementById('studentPlan').value,
+                planValue: parseFloat(document.getElementById('studentPlanValue').value) || 0,
+                status: 'active',
+                lastPayment: new Date().toISOString().split('T')[0],
+                notes: document.getElementById('studentNotes').value,
+                frequencyDays: getSelectedDays()
+            };
+
+            students.push(studentData);
+            populateStudentsTable();
+            populateStudentSelects();
+            updateDashboardStats();
+            showScreen('studentManagementScreen');
+            showNotification('Aluno cadastrado com sucesso!', 'success');
+            
+            // Reset form
+            document.getElementById('studentForm').reset();
+            document.getElementById('studentBMI').value = '';
+        }
+
+        function handleSeriesSubmit(e) {
+            e.preventDefault();
+            
+            const exercises = [];
+            document.querySelectorAll('#exercisesContainer .exercise-item').forEach(item => {
+                const inputs = item.querySelectorAll('input');
+                if (inputs[0].value) {
+                    exercises.push({
+                        name: inputs[0].value,
+                        sets: parseInt(inputs[1].value) || 0,
+                        reps: parseInt(inputs[2].value) || 0,
+                        rest: inputs[3].value || '0s'
+                    });
+                }
+            });
+
+            const seriesData = {
+                id: Date.now(),
+                name: document.getElementById('seriesName').value,
+                type: document.getElementById('seriesType').value,
+                description: document.getElementById('seriesDescription').value,
+                exercises: exercises
+            };
+
+            series.push(seriesData);
+            populateSeries();
+            updateDashboardStats();
+            showScreen('seriesManagementScreen');
+            showNotification('Série criada com sucesso!', 'success');
+            
+            // Reset form
+            document.getElementById('seriesForm').reset();
+            document.getElementById('exercisesContainer').innerHTML = `
+                <div class="exercise-item">
+                    <div class="row align-items-center">
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" placeholder="Nome do exercício">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" placeholder="Séries">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" placeholder="Repetições">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" placeholder="Descanso">
+                        </div>
+                        <div class="col-md-2">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeExercise(this)">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function handleSchedulingSubmit(e) {
+            e.preventDefault();
+            
+            const studentId = parseInt(document.getElementById('scheduleStudent').value);
+            const student = students.find(s => s.id === studentId);
+            
+            const scheduleData = {
+                id: Date.now(),
+                studentId: studentId,
+                studentName: student.name,
+                type: document.getElementById('scheduleType').value,
+                date: document.getElementById('scheduleDate').value,
+                time: document.getElementById('scheduleTime').value,
+                notes: document.getElementById('scheduleNotes').value,
+                status: 'scheduled'
+            };
+
+            schedules.push(scheduleData);
+            populateSchedules();
+            updateDashboardStats();
+            showScreen('schedulingScreen');
+            showNotification('Agendamento criado com sucesso!', 'success');
+            
+            // Reset form
+            document.getElementById('schedulingForm').reset();
+        }
+
+        function handleFinancialSubmit(e) {
+            e.preventDefault();
+            
+            const financialData = {
+                id: Date.now(),
+                description: document.getElementById('financialDescription').value,
+                category: document.getElementById('financialCategory').value,
+                amount: parseFloat(document.getElementById('financialAmount').value),
+                type: document.getElementById('financialFormScreen').dataset.type || 'income',
+                date: document.getElementById('financialDate').value,
+                paymentMethod: document.getElementById('financialPaymentMethod').value,
+                notes: document.getElementById('financialNotes').value
+            };
+
+            financialTransactions.push(financialData);
+            populateFinancial();
+            updateFinancialStats();
+            showScreen('financialScreen');
+            showNotification('Transação registrada com sucesso!', 'success');
+            
+            // Reset form
+            document.getElementById('financialForm').reset();
+        }
+
+        function handleNutritionSubmit(e) {
+            e.preventDefault();
+            
+            const meals = [];
+            document.querySelectorAll('#mealsContainer .meal-card').forEach(item => {
+                const name = item.querySelector('h6').textContent;
+                const description = item.querySelector('textarea').value;
+                meals.push({ name, description });
+            });
+
+            const nutritionData = {
+                id: Date.now(),
+                name: document.getElementById('nutritionName').value,
+                goal: document.getElementById('nutritionGoal').value,
+                calories: parseInt(document.getElementById('nutritionCalories').value) || 0,
+                protein: parseInt(document.getElementById('nutritionProtein').value) || 0,
+                carbs: parseInt(document.getElementById('nutritionCarbs').value) || 0,
+                fats: parseInt(document.getElementById('nutritionFats').value) || 0,
+                meals: meals
+            };
+
+            nutritionPlans.push(nutritionData);
+            populateNutrition();
+            showScreen('nutritionScreen');
+            showNotification('Plano nutricional criado com sucesso!', 'success');
+            
+            // Reset form
+            document.getElementById('nutritionForm').reset();
+            document.getElementById('mealsContainer').innerHTML = `
+                <div class="meal-card">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6>Café da Manhã</h6>
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeMeal(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    <textarea class="form-control" rows="2" placeholder="Descrição da refeição..."></textarea>
+                </div>
+            `;
+        }
+
+        function handleGoalsSubmit(e) {
+            e.preventDefault();
+            
+            const studentId = parseInt(document.getElementById('goalStudent').value);
+            const student = students.find(s => s.id === studentId);
+            
+            const goalData = {
+                id: Date.now(),
+                studentId: studentId,
+                studentName: student.name,
+                type: document.getElementById('goalType').value,
+                description: document.getElementById('goalDescription').value,
+                initialValue: parseFloat(document.getElementById('goalInitialValue').value),
+                targetValue: parseFloat(document.getElementById('goalTargetValue').value),
+                currentValue: parseFloat(document.getElementById('goalInitialValue').value),
+                unit: document.getElementById('goalUnit').value,
+                deadline: document.getElementById('goalDeadline').value,
+                status: 'active',
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+
+            goals.push(goalData);
+            populateGoals();
+            showScreen('goalsScreen');
+            showNotification('Meta criada com sucesso!', 'success');
+            
+            // Reset form
+            document.getElementById('goalsForm').reset();
+        }
+
+        function getSelectedDays() {
+            const days = [];
+            for (let i = 1; i <= 7; i++) {
+                if (document.getElementById(`day${i}`).checked) {
+                    days.push(i);
+                }
+            }
+            return days;
+        }
+
+        function calculateBMI() {
+            const weight = parseFloat(document.getElementById('studentWeight').value);
+            const height = parseInt(document.getElementById('studentHeight').value);
+            
+            if (weight && height) {
+                const heightInMeters = height / 100;
+                const bmi = weight / (heightInMeters * heightInMeters);
+                document.getElementById('studentBMI').value = bmi.toFixed(1);
+            } else {
+                document.getElementById('studentBMI').value = '';
+            }
+        }
+
+        function populateStudentsTable() {
+            const tbody = document.getElementById('studentsTableBody');
+            tbody.innerHTML = '';
+
+            students.forEach(student => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${student.name}</td>
+                    <td>${student.email}<br><small>${student.phone}</small></td>
+                    <td><span class="badge bg-primary">${student.plan}</span></td>
+                    <td>${getStatusBadge(student.status)}</td>
+                    <td>${formatDate(student.lastPayment)}</td>
+                    <td>
+                        <button class="btn btn-sm btn-outline-primary me-1" onclick="editStudent(${student.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger" onclick="deleteStudent(${student.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function populateSeries() {
+            const container = document.getElementById('seriesContainer');
+            container.innerHTML = '';
+
+            series.forEach(serie => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-3';
+                col.innerHTML = `
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title">${serie.name}</h5>
+                                    <span class="badge bg-secondary">${getTypeLabel(serie.type)}</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editSeries(${serie.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteSeries(${serie.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <p class="card-text">${serie.description}</p>
+                            <h6>Exercícios:</h6>
+                            <ul class="list-unstyled">
+                                ${serie.exercises.map(ex => `
+                                    <li class="mb-1">
+                                        <strong>${ex.name}</strong> - ${ex.sets}x${ex.reps} (${ex.rest})
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        function populateSchedules() {
+            const container = document.getElementById('daySchedules');
+            container.innerHTML = '';
+
+            const todaySchedules = schedules.filter(s => s.date === selectedDate.toISOString().split('T')[0]);
+            
+            if (todaySchedules.length === 0) {
+                container.innerHTML = '<p class="text-muted">Nenhum agendamento para hoje.</p>';
+                return;
+            }
+
+            todaySchedules.forEach(schedule => {
+                const item = document.createElement('div');
+                item.className = 'alert alert-info mb-2';
+                item.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${schedule.time}</strong> - ${schedule.studentName}
+                            <br><small>${getTypeLabel(schedule.type)}: ${schedule.notes}</small>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-success" onclick="completeSchedule(${schedule.id})">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="cancelSchedule(${schedule.id})">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function populateFinancial() {
+            const container = document.getElementById('financialTransactions');
+            container.innerHTML = '';
+
+            financialTransactions.forEach(transaction => {
+                const item = document.createElement('div');
+                item.className = 'transaction-item';
+                item.innerHTML = `
+                    <div>
+                        <strong>${transaction.description}</strong>
+                        <br><small>${transaction.category} - ${formatDate(transaction.date)}</small>
+                    </div>
+                    <div class="transaction-amount ${transaction.type}">
+                        ${transaction.type === 'income' ? '+' : '-'}R$ ${transaction.amount.toFixed(2)}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+
+            updateFinancialStats();
+        }
+
+        function populateNutrition() {
+            const container = document.getElementById('nutritionPlans');
+            container.innerHTML = '';
+
+            nutritionPlans.forEach(plan => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-3';
+                col.innerHTML = `
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h5 class="card-title">${plan.name}</h5>
+                                    <span class="badge bg-success">${getGoalLabel(plan.goal)}</span>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editNutrition(${plan.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteNutrition(${plan.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="row text-center mb-3">
+                                <div class="col-3">
+                                    <small>Cal</small>
+                                    <br><strong>${plan.calories}</strong>
+                                </div>
+                                <div class="col-3">
+                                    <small>Prot</small>
+                                    <br><strong>${plan.protein}g</strong>
+                                </div>
+                                <div class="col-3">
+                                    <small>Carb</small>
+                                    <br><strong>${plan.carbs}g</strong>
+                                </div>
+                                <div class="col-3">
+                                    <small>Gord</small>
+                                    <br><strong>${plan.fats}g</strong>
+                                </div>
+                            </div>
+                            <h6>Refeições:</h6>
+                            ${plan.meals.map(meal => `
+                                <div class="meal-card mb-2">
+                                    <strong>${meal.name}</strong>
+                                    <br><small>${meal.description}</small>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        function populateGoals() {
+            const container = document.getElementById('goalsContainer');
+            container.innerHTML = '';
+
+            goals.forEach(goal => {
+                const progress = ((goal.currentValue - goal.initialValue) / (goal.targetValue - goal.initialValue)) * 100;
+                const col = document.createElement('div');
+                col.className = 'col-md-6 mb-3';
+                col.innerHTML = `
+                    <div class="goal-item">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <div>
+                                <h5>${goal.description}</h5>
+                                <p class="mb-1"><strong>Aluno:</strong> ${goal.studentName}</p>
+                                <p class="mb-1"><strong>Tipo:</strong> ${getTypeLabel(goal.type)}</p>
+                                <p class="mb-1"><strong>Prazo:</strong> ${formatDate(goal.deadline)}</p>
+                            </div>
+                            <div>
+                                <span class="badge bg-${goal.status === 'active' ? 'primary' : 'success'}">${getStatusGoalLabel(goal.status)}</span>
+                            </div>
+                        </div>
+                        <div class="goal-progress">
+                            <div class="d-flex justify-content-between mb-1">
+                                <span>${goal.currentValue} ${goal.unit}</span>
+                                <span>${goal.targetValue} ${goal.unit}</span>
+                            </div>
+                            <div class="progress-custom">
+                                <div class="progress-bar-custom" style="width: ${Math.min(progress, 100)}%"></div>
+                            </div>
+                            <small class="text-muted">${progress.toFixed(1)}% completo</small>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        function populateStudentSelects() {
+            const selects = ['scheduleStudent', 'goalStudent'];
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (select) {
+                    select.innerHTML = '<option value="">Selecione um aluno</option>';
+                    students.forEach(student => {
+                        const option = document.createElement('option');
+                        option.value = student.id;
+                        option.textContent = student.name;
+                        select.appendChild(option);
+                    });
+                }
+            });
+        }
+
+        function populateFinancialCategories() {
+            const categories = {
+                income: ['mensalidade', 'avaliação', 'workshop', 'produto'],
+                expense: ['aluguel', 'funcionários', 'equipamentos', 'manutenção', 'marketing', 'outros']
+            };
+
+            const updateCategories = (type) => {
+                const select = document.getElementById('financialCategory');
+                select.innerHTML = '<option value="">Selecione uma categoria</option>';
+                categories[type].forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+                    select.appendChild(option);
+                });
+            };
+
+            // Set initial categories
+            updateCategories('income');
+        }
+
+        function updateDashboardStats() {
+            const activeStudents = students.filter(s => s.status === 'active').length;
+            const monthlyRevenue = students
+                .filter(s => s.status === 'active')
+                .reduce((sum, s) => sum + s.planValue, 0);
+            const todaySchedulesCount = schedules.filter(s => 
+                s.date === new Date().toISOString().split('T')[0] && s.status === 'scheduled'
+            ).length;
+            
+            document.getElementById('totalStudents').textContent = activeStudents;
+            document.getElementById('totalSeries').textContent = series.length;
+            document.getElementById('monthlyRevenue').textContent = monthlyRevenue.toFixed(2);
+            document.getElementById('todaySchedules').textContent = todaySchedulesCount;
+        }
+
+        function updateFinancialStats() {
+            const income = financialTransactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + t.amount, 0);
+            const expenses = financialTransactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+            const balance = income - expenses;
+            const pending = students
+                .filter(s => s.status === 'overdue')
+                .reduce((sum, s) => sum + s.planValue, 0);
+
+            document.getElementById('totalIncome').textContent = `R$ ${income.toFixed(2)}`;
+            document.getElementById('totalExpenses').textContent = `R$ ${expenses.toFixed(2)}`;
+            document.getElementById('totalBalance').textContent = `R$ ${balance.toFixed(2)}`;
+            document.getElementById('pendingPayments').textContent = `R$ ${pending.toFixed(2)}`;
+        }
+
+        function initializeCharts() {
+            // Evolution Chart
+            const evolutionCtx = document.getElementById('evolutionChart').getContext('2d');
+            evolutionChart = new Chart(evolutionCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun'],
+                    datasets: [{
+                        label: 'Alunos',
+                        data: [12, 19, 15, 25, 22, 30],
+                        borderColor: '#4F46E5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+
+            // Distribution Chart
+            const distributionCtx = document.getElementById('distributionChart').getContext('2d');
+            distributionChart = new Chart(distributionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Básico', 'Premium', 'VIP'],
+                    datasets: [{
+                        data: [30, 50, 20],
+                        backgroundColor: [
+                            '#10B981',
+                            '#4F46E5',
+                            '#EC4899'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        function initializeCalendar() {
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const year = currentMonth.getFullYear();
+            const month = currentMonth.getMonth();
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            
+            const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+                               'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            
+            document.getElementById('currentMonth').textContent = `${monthNames[month]} ${year}`;
+            
+            const grid = document.getElementById('calendarGrid');
+            grid.innerHTML = '';
+            
+            // Day headers
+            const dayHeaders = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            dayHeaders.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'calendar-day font-weight-bold';
+                header.textContent = day;
+                grid.appendChild(header);
+            });
+            
+            // Empty cells before first day
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement('div');
+                grid.appendChild(emptyDay);
+            }
+            
+            // Days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayElement = document.createElement('div');
+                dayElement.className = 'calendar-day';
+                dayElement.textContent = day;
+                
+                const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const hasSchedule = schedules.some(s => s.date === dateStr);
+                const isToday = dateStr === new Date().toISOString().split('T')[0];
+                const isSelected = dateStr === selectedDate.toISOString().split('T')[0];
+                
+                if (hasSchedule) {
+                    dayElement.classList.add('has-event');
+                }
+                if (isToday) {
+                    dayElement.classList.add('today');
+                }
+                if (isSelected) {
+                    dayElement.style.background = 'var(--primary)';
+                    dayElement.style.color = 'white';
+                }
+                
+                dayElement.onclick = () => selectDate(new Date(year, month, day));
+                grid.appendChild(dayElement);
+            }
+        }
+
+        function selectDate(date) {
+            selectedDate = date;
+            renderCalendar();
+            populateSchedules();
+        }
+
+        function previousMonth() {
+            currentMonth.setMonth(currentMonth.getMonth() - 1);
+            renderCalendar();
+        }
+
+        function nextMonth() {
+            currentMonth.setMonth(currentMonth.getMonth() + 1);
+            renderCalendar();
+        }
+
+        function editStudent(id) {
+            const student = students.find(s => s.id === id);
+            if (student) {
+                // Populate form with student data
+                document.getElementById('studentName').value = student.name;
+                document.getElementById('studentEmail').value = student.email;
+                document.getElementById('studentPhone').value = student.phone;
+                document.getElementById('studentCPF').value = student.cpf;
+                document.getElementById('studentBirthDate').value = student.birthDate;
+                document.getElementById('studentWeight').value = student.weight;
+                document.getElementById('studentHeight').value = student.height;
+                document.getElementById('studentBodyFat').value = student.bodyFat;
+                document.getElementById('studentPlan').value = student.plan;
+                document.getElementById('studentPlanValue').value = student.planValue;
+                document.getElementById('studentNotes').value = student.notes;
+                
+                // Set frequency days
+                for (let i = 1; i <= 7; i++) {
+                    document.getElementById(`day${i}`).checked = student.frequencyDays.includes(i);
+                }
+                
+                calculateBMI();
+                showScreen('studentFormScreen');
+            }
+        }
+
+        function deleteStudent(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Esta ação não pode ser desfeita!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, deletar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    students = students.filter(s => s.id !== id);
+                    populateStudentsTable();
+                    populateStudentSelects();
+                    updateDashboardStats();
+                    showNotification('Aluno deletado com sucesso!', 'success');
+                }
+            });
+        }
+
+        function editSeries(id) {
+            const serie = series.find(s => s.id === id);
+            if (serie) {
+                document.getElementById('seriesName').value = serie.name;
+                document.getElementById('seriesType').value = serie.type;
+                document.getElementById('seriesDescription').value = serie.description;
+                
+                // Populate exercises
+                const container = document.getElementById('exercisesContainer');
+                container.innerHTML = '';
+                serie.exercises.forEach(ex => {
+                    addExercise();
+                    const lastExercise = container.lastElementChild;
+                    const inputs = lastExercise.querySelectorAll('input');
+                    inputs[0].value = ex.name;
+                    inputs[1].value = ex.sets;
+                    inputs[2].value = ex.reps;
+                    inputs[3].value = ex.rest;
+                });
+                
+                showScreen('seriesFormScreen');
+            }
+        }
+
+        function deleteSeries(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Esta ação não pode ser desfeita!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, deletar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    series = series.filter(s => s.id !== id);
+                    populateSeries();
+                    updateDashboardStats();
+                    showNotification('Série deletada com sucesso!', 'success');
+                }
+            });
+        }
+
+        function completeSchedule(id) {
+            const schedule = schedules.find(s => s.id === id);
+            if (schedule) {
+                schedule.status = 'completed';
+                populateSchedules();
+                showNotification('Agendamento concluído!', 'success');
+            }
+        }
+
+        function cancelSchedule(id) {
+            Swal.fire({
+                title: 'Cancelar agendamento?',
+                text: 'Tem certeza que deseja cancelar este agendamento?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, cancelar',
+                cancelButtonText: 'Não'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    schedules = schedules.filter(s => s.id !== id);
+                    populateSchedules();
+                    showNotification('Agendamento cancelado!', 'success');
+                }
+            });
+        }
+
+        function deleteNutrition(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Esta ação não pode ser desfeita!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, deletar!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    nutritionPlans = nutritionPlans.filter(p => p.id !== id);
+                    populateNutrition();
+                    showNotification('Plano deletado com sucesso!', 'success');
+                }
+            });
+        }
+
+        function editNutrition(id) {
+            const plan = nutritionPlans.find(p => p.id === id);
+            if (plan) {
+                document.getElementById('nutritionName').value = plan.name;
+                document.getElementById('nutritionGoal').value = plan.goal;
+                document.getElementById('nutritionCalories').value = plan.calories;
+                document.getElementById('nutritionProtein').value = plan.protein;
+                document.getElementById('nutritionCarbs').value = plan.carbs;
+                document.getElementById('nutritionFats').value = plan.fats;
+                
+                // Populate meals
+                const container = document.getElementById('mealsContainer');
+                container.innerHTML = '';
+                plan.meals.forEach(meal => {
+                    addMeal();
+                    const lastMeal = container.lastElementChild;
+                    lastMeal.querySelector('h6').textContent = meal.name;
+                    lastMeal.querySelector('textarea').value = meal.description;
+                });
+                
+                showScreen('nutritionFormScreen');
+            }
+        }
+
+        function addExercise() {
+            const container = document.getElementById('exercisesContainer');
+            const exerciseDiv = document.createElement('div');
+            exerciseDiv.className = 'exercise-item';
+            exerciseDiv.innerHTML = `
+                <div class="row align-items-center">
+                    <div class="col-md-4">
+                        <input type="text" class="form-control" placeholder="Nome do exercício">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" placeholder="Séries">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" class="form-control" placeholder="Repetições">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="text" class="form-control" placeholder="Descanso">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger btn-sm" onclick="removeExercise(this)">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(exerciseDiv);
+        }
+
+        function removeExercise(button) {
+            button.closest('.exercise-item').remove();
+        }
+
+        function addMeal() {
+            const container = document.getElementById('mealsContainer');
+            const mealDiv = document.createElement('div');
+            mealDiv.className = 'meal-card';
+            mealDiv.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h6>Refeição</h6>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeMeal(this)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <textarea class="form-control" rows="2" placeholder="Descrição da refeição..."></textarea>
+            `;
+            container.appendChild(mealDiv);
+        }
+
+        function removeMeal(button) {
+            button.closest('.meal-card').remove();
+        }
+
+        function searchStudents() {
+            const searchTerm = document.getElementById('searchStudents').value.toLowerCase();
+            const rows = document.querySelectorAll('#studentsTableBody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterStudents(filter) {
+            const rows = document.querySelectorAll('#studentsTableBody tr');
+            
+            rows.forEach(row => {
+                const statusCell = row.cells[3];
+                const status = statusCell.textContent.toLowerCase();
+                
+                if (filter === 'all') {
+                    row.style.display = '';
+                } else if (filter === 'active' && status.includes('ativo')) {
+                    row.style.display = '';
+                } else if (filter === 'inactive' && status.includes('inativo')) {
+                    row.style.display = '';
+                } else if (filter === 'overdue' && status.includes('inadimplente')) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        function searchSeries() {
+            const searchTerm = document.getElementById('searchSeries').value.toLowerCase();
+            const cards = document.querySelectorAll('#seriesContainer .card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterSeries(filter) {
+            const cards = document.querySelectorAll('#seriesContainer .card');
+            
+            cards.forEach(card => {
+                const typeBadge = card.querySelector('.badge');
+                const type = typeBadge.textContent.toLowerCase();
+                
+                if (filter === 'all') {
+                    card.style.display = '';
+                } else if (type.includes(filter)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function searchFinancial() {
+            const searchTerm = document.getElementById('searchFinancial').value.toLowerCase();
+            const items = document.querySelectorAll('#financialTransactions .transaction-item');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterFinancialByType(type) {
+            const items = document.querySelectorAll('#financialTransactions .transaction-item');
+            
+            items.forEach(item => {
+                const amountElement = item.querySelector('.transaction-amount');
+                const isIncome = amountElement.classList.contains('income');
+                
+                if (type === 'all') {
+                    item.style.display = '';
+                } else if (type === 'income' && isIncome) {
+                    item.style.display = '';
+                } else if (type === 'expense' && !isIncome) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function filterFinancialByMonth() {
+            const selectedMonth = document.getElementById('financialMonth').value;
+            const items = document.querySelectorAll('#financialTransactions .transaction-item');
+            
+            items.forEach(item => {
+                const dateText = item.querySelector('small').textContent;
+                const itemDate = new Date(dateText);
+                const itemMonth = `${itemDate.getFullYear()}-${String(itemDate.getMonth() + 1).padStart(2, '0')}`;
+                
+                item.style.display = itemMonth === selectedMonth ? '' : 'none';
+            });
+        }
+
+        function searchNutrition() {
+            const searchTerm = document.getElementById('searchNutrition').value.toLowerCase();
+            const cards = document.querySelectorAll('#nutritionPlans .card');
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterNutrition(filter) {
+            const cards = document.querySelectorAll('#nutritionPlans .card');
+            
+            cards.forEach(card => {
+                const goalBadge = card.querySelector('.badge');
+                const goal = goalBadge.textContent.toLowerCase();
+                
+                if (filter === 'all') {
+                    card.style.display = '';
+                } else if (goal.includes(filter)) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function searchGoals() {
+            const searchTerm = document.getElementById('searchGoals').value.toLowerCase();
+            const items = document.querySelectorAll('#goalsContainer .goal-item');
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function filterGoals(filter) {
+            const items = document.querySelectorAll('#goalsContainer .goal-item');
+            
+            items.forEach(item => {
+                const statusBadge = item.querySelector('.badge');
+                const status = statusBadge.textContent.toLowerCase();
+                
+                if (filter === 'all') {
+                    item.style.display = '';
+                } else if (status.includes(filter)) {
+                    item.style.display = '';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        function generateReport() {
+            const reportType = document.querySelector('input[name="reportType"]:checked').value;
+            const reportFormat = document.getElementById('reportFormat').value;
+            
+            showNotification(`Gerando relatório ${reportType} em formato ${reportFormat}...`, 'info');
+            
+            // Simulate report generation
+            setTimeout(() => {
+                showNotification('Relatório gerado com sucesso!', 'success');
+            }, 2000);
+        }
+
+        function getStatusBadge(status) {
+            const badges = {
+                active: '<span class="badge bg-success">Ativo</span>',
+                inactive: '<span class="badge bg-secondary">Inativo</span>',
+                overdue: '<span class="badge bg-danger">Inadimplente</span>'
+            };
+            return badges[status] || badges.active;
+        }
+
+        function getStatusGoalLabel(status) {
+            const labels = {
+                active: 'Ativa',
+                completed: 'Concluída',
+                expired: 'Expirada'
+            };
+            return labels[status] || 'Ativa';
+        }
+
+        function getTypeLabel(type) {
+            const labels = {
+                strength: 'Força',
+                cardio: 'Cardio',
+                flexibility: 'Flexibilidade',
+                training: 'Treino',
+                assessment: 'Avaliação',
+                consultation: 'Consulta',
+                'weight-loss': 'Emagrecimento',
+                'muscle-gain': 'Hipertrofia',
+                maintenance: 'Manutenção'
+            };
+            return labels[type] || type;
+        }
+
+        function getGoalLabel(goal) {
+            const labels = {
+                'weight-loss': 'Emagrecimento',
+                'muscle-gain': 'Hipertrofia',
+                maintenance: 'Manutenção'
+            };
+            return labels[goal] || goal;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const themeIcon = document.getElementById('themeIcon');
+            
+            if (html.getAttribute('data-theme') === 'dark') {
+                html.removeAttribute('data-theme');
+                themeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                themeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            }
+        }
+
+        function showScreen(screenId, type = null) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // Show selected screen
+            document.getElementById(screenId).classList.add('active');
+            
+            // Update sidebar active item
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and activate corresponding sidebar item
+            const sidebarItems = document.querySelectorAll('.sidebar-item');
+            sidebarItems.forEach(item => {
+                if (item.onclick && item.onclick.toString().includes(screenId)) {
+                    item.classList.add('active');
+                }
+            });
+
+            // Handle form screen types
+            if (screenId === 'financialFormScreen' && type) {
+                document.getElementById('financialFormScreen').dataset.type = type;
+                document.getElementById('financialFormTitle').textContent = 
+                    type === 'income' ? 'Nova Receita' : 'Nova Despesa';
+                
+                // Update categories based on type
+                const categories = {
+                    income: ['mensalidade', 'avaliação', 'workshop', 'produto'],
+                    expense: ['aluguel', 'funcionários', 'equipamentos', 'manutenção', 'marketing', 'outros']
+                };
+                
+                const select = document.getElementById('financialCategory');
+                select.innerHTML = '<option value="">Selecione uma categoria</option>';
+                categories[type].forEach(cat => {
+                    const option = document.createElement('option');
+                    option.value = cat;
+                    option.textContent = cat.charAt(0).toUpperCase() + cat.slice(1);
+                    select.appendChild(option);
+                });
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function closeSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.remove('open');
+        }
+
+        function showNotifications() {
+            Swal.fire({
+                title: 'Notificações',
+                html: `
+                    <div class="text-start">
+                        <div class="alert alert-info mb-2">
+                            <i class="fas fa-info-circle me-2"></i>
+                            Novo aluno cadastrado: João Silva
+                        </div>
+                        <div class="alert alert-warning mb-2">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Pagamento pendente: Pedro Oliveira
+                        </div>
+                        <div class="alert alert-success mb-0">
+                            <i class="fas fa-check-circle me-2"></i>
+                            Relatório mensal gerado com sucesso
+                        </div>
+                    </div>
+                `,
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
+        }
+
+        function logout() {
+            Swal.fire({
+                title: 'Sair do sistema?',
+                text: 'Tem certeza que deseja sair?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, sair',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    currentUser = null;
+                    showScreen('loginScreen');
+                    showNotification('Logout realizado com sucesso!', 'success');
+                }
+            });
+        }
+
+        function saveSettings() {
+            showNotification('Configurações salvas com sucesso!', 'success');
+        }
+
+        function toggleChat() {
+            const chatWidget = document.getElementById('chatWidget');
+            chatWidget.classList.toggle('open');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                const messagesContainer = document.getElementById('chatMessages');
+                
+                // Add user message
+                const userMessage = document.createElement('div');
+                userMessage.className = 'alert alert-primary mb-2';
+                userMessage.innerHTML = `<strong>Você:</strong> ${message}`;
+                messagesContainer.appendChild(userMessage);
+                
+                // Add bot response
+                setTimeout(() => {
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'alert alert-secondary mb-2';
+                    botMessage.innerHTML = `<strong>Suporte:</strong> Obrigado pela sua mensagem! Em breve um de nossos atendentes irá responder.`;
+                    messagesContainer.appendChild(botMessage);
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                }, 1000);
+                
+                input.value = '';
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        function handleChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function showNotification(message, type = 'info') {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            const icons = {
+                success: 'success',
+                error: 'error',
+                warning: 'warning',
+                info: 'info'
+            };
+
+            Toast.fire({
+                icon: icons[type] || 'info',
+                title: message
+            });
+        }
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', function(event) {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = event.target.closest('[onclick="toggleSidebar()"]');
+            
+            if (!sidebar.contains(event.target) && !sidebarToggle && sidebar.classList.contains('open')) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>
