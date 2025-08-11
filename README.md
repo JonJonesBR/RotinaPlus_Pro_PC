@@ -26,7 +26,6 @@ Acesse a aplicação em funcionamento: **[RotinaPlus Pro Demo](https://jonjonesb
 - [Estrutura do Projeto](#-estrutura-do-projeto)
 - [Contribuição](#-contribuição)
 - [Licença](#-licença)
-- [Contato](#-contato)
 
 ## 📖 Sobre o Projeto
 
